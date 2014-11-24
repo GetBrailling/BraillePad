@@ -301,49 +301,6 @@
 </deviceset>
 </devicesets>
 </library>
-<library name="BraillePad">
-<packages>
-<package name="SMT-BUTTON">
-<description>All cheap SMT buttons are different, as if i'd find it in an exsisting library?
-This is my best try!</description>
-<wire x1="2.25" y1="-2" x2="2.25" y2="2" width="0.127" layer="21"/>
-<wire x1="2.25" y1="2" x2="-2.25" y2="2" width="0.127" layer="21"/>
-<wire x1="-2.25" y1="2" x2="-2.25" y2="-2" width="0.127" layer="21"/>
-<circle x="0" y="0" radius="0.9013875" width="0.127" layer="21"/>
-<wire x1="-2.25" y1="-2" x2="2.25" y2="-2" width="0.127" layer="21"/>
-<smd name="A1" x="-1.5" y="2" dx="1.27" dy="0.635" layer="1" rot="R90"/>
-<smd name="B1" x="1.5" y="2" dx="1.27" dy="0.635" layer="1" rot="R90"/>
-<smd name="B2" x="1.5" y="-2" dx="1.27" dy="0.635" layer="1" rot="R90"/>
-<smd name="A2" x="-1.5" y="-2" dx="1.27" dy="0.635" layer="1" rot="R90"/>
-<text x="-2.5" y="-2.5" size="1.27" layer="25" rot="R90">NAME</text>
-</package>
-</packages>
-<symbols>
-<symbol name="SMT-BUTTON">
-<wire x1="-2.54" y1="0" x2="2.54" y2="2.54" width="0.254" layer="94"/>
-<pin name="A" x="-7.62" y="0" visible="off" length="middle"/>
-<pin name="B" x="7.62" y="0" visible="off" length="middle" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="SMT_BUTTON">
-<gates>
-<gate name="G$1" symbol="SMT-BUTTON" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SMT-BUTTON">
-<connects>
-<connect gate="G$1" pin="A" pad="A1 A2"/>
-<connect gate="G$1" pin="B" pad="B1 B2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="rcl">
 <description>&lt;b&gt;Resistors, Capacitors, Inductors&lt;/b&gt;&lt;p&gt;
 Based on the previous libraries:
@@ -3735,6 +3692,49 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="BraillePad">
+<packages>
+<package name="SMT-BUTTON">
+<description>All cheap SMT buttons are different, as if i'd find it in an exsisting library?
+This is my best try!</description>
+<wire x1="3.25" y1="-3" x2="3.25" y2="3" width="0.127" layer="21"/>
+<wire x1="3.25" y1="3" x2="-3.25" y2="3" width="0.127" layer="21"/>
+<wire x1="-3.25" y1="3" x2="-3.25" y2="-3" width="0.127" layer="21"/>
+<circle x="0" y="0" radius="1.5" width="0.127" layer="21"/>
+<wire x1="-3.25" y1="-3" x2="3.25" y2="-3" width="0.127" layer="21"/>
+<smd name="A1" x="-2.1" y="4" dx="1.778" dy="0.9144" layer="1" rot="R90"/>
+<smd name="B1" x="2.1" y="4" dx="1.778" dy="0.9144" layer="1" rot="R90"/>
+<smd name="B2" x="2.1" y="-4" dx="1.778" dy="0.9144" layer="1" rot="R90"/>
+<smd name="A2" x="-2.1" y="-4" dx="1.778" dy="0.9144" layer="1" rot="R90"/>
+<text x="-2.5" y="-2.5" size="1.27" layer="25" rot="R90">NAME</text>
+</package>
+</packages>
+<symbols>
+<symbol name="SMT-BUTTON">
+<wire x1="-2.54" y1="0" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<pin name="A" x="-7.62" y="0" visible="off" length="middle"/>
+<pin name="B" x="7.62" y="0" visible="off" length="middle" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="SMT_BUTTON">
+<gates>
+<gate name="G$1" symbol="SMT-BUTTON" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SMT-BUTTON">
+<connects>
+<connect gate="G$1" pin="A" pad="A1 A2"/>
+<connect gate="G$1" pin="B" pad="B1 B2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -3746,18 +3746,18 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </classes>
 <parts>
 <part name="JP1" library="adafruit" deviceset="PINHD-1X8" device="BIG"/>
-<part name="U$1" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
-<part name="U$2" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
-<part name="U$3" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
-<part name="U$4" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
-<part name="U$5" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
-<part name="U$6" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="R3" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="M0805"/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="M0805"/>
+<part name="U$1" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
+<part name="U$2" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
+<part name="U$3" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
+<part name="U$4" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
+<part name="U$5" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
+<part name="U$6" library="BraillePad" deviceset="SMT_BUTTON" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3765,18 +3765,18 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </plain>
 <instances>
 <instance part="JP1" gate="G$1" x="73.66" y="78.74" rot="R90"/>
-<instance part="U$1" gate="G$1" x="58.42" y="48.26"/>
-<instance part="U$2" gate="G$1" x="58.42" y="38.1"/>
-<instance part="U$3" gate="G$1" x="58.42" y="27.94"/>
-<instance part="U$4" gate="G$1" x="96.52" y="48.26"/>
-<instance part="U$5" gate="G$1" x="96.52" y="38.1"/>
-<instance part="U$6" gate="G$1" x="96.52" y="27.94"/>
 <instance part="R1" gate="G$1" x="88.9" y="68.58"/>
 <instance part="R2" gate="G$1" x="88.9" y="66.04"/>
 <instance part="R3" gate="G$1" x="88.9" y="63.5"/>
 <instance part="R4" gate="G$1" x="88.9" y="60.96"/>
 <instance part="R6" gate="G$1" x="88.9" y="55.88"/>
 <instance part="R5" gate="G$1" x="88.9" y="58.42"/>
+<instance part="U$1" gate="G$1" x="58.42" y="48.26"/>
+<instance part="U$2" gate="G$1" x="58.42" y="38.1"/>
+<instance part="U$3" gate="G$1" x="58.42" y="27.94"/>
+<instance part="U$4" gate="G$1" x="96.52" y="27.94"/>
+<instance part="U$5" gate="G$1" x="96.52" y="38.1"/>
+<instance part="U$6" gate="G$1" x="96.52" y="48.26"/>
 </instances>
 <busses>
 </busses>
@@ -3785,40 +3785,39 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <segment>
 <pinref part="JP1" gate="G$1" pin="1"/>
 <wire x1="66.04" y1="76.2" x2="66.04" y2="68.58" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="B"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="66.04" y1="68.58" x2="66.04" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="83.82" y1="68.58" x2="66.04" y2="68.58" width="0.1524" layer="91"/>
 <junction x="66.04" y="68.58"/>
+<pinref part="U$1" gate="G$1" pin="B"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="JP1" gate="G$1" pin="2"/>
 <wire x1="68.58" y1="76.2" x2="68.58" y2="66.04" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="B"/>
 <wire x1="68.58" y1="66.04" x2="68.58" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="38.1" x2="68.58" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="R2" gate="G$1" pin="1"/>
 <wire x1="68.58" y1="66.04" x2="83.82" y2="66.04" width="0.1524" layer="91"/>
 <junction x="68.58" y="66.04"/>
+<pinref part="U$2" gate="G$1" pin="B"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="JP1" gate="G$1" pin="3"/>
 <wire x1="71.12" y1="76.2" x2="71.12" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="B"/>
 <wire x1="71.12" y1="63.5" x2="71.12" y2="27.94" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="27.94" x2="71.12" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="83.82" y1="63.5" x2="71.12" y2="63.5" width="0.1524" layer="91"/>
 <junction x="71.12" y="63.5"/>
+<pinref part="U$3" gate="G$1" pin="B"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
-<pinref part="U$6" gate="G$1" pin="A"/>
 <wire x1="73.66" y1="60.96" x2="73.66" y2="27.94" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="27.94" x2="88.9" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="R4" gate="G$1" pin="1"/>
@@ -3827,11 +3826,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="76.2" y1="60.96" x2="83.82" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="76.2" y1="76.2" x2="76.2" y2="60.96" width="0.1524" layer="91"/>
 <junction x="76.2" y="60.96"/>
+<pinref part="U$4" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="N$5" class="0">
 <segment>
-<pinref part="U$5" gate="G$1" pin="A"/>
 <wire x1="88.9" y1="38.1" x2="76.2" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="76.2" y1="38.1" x2="76.2" y2="58.42" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="1"/>
@@ -3840,11 +3839,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="78.74" y1="58.42" x2="76.2" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="78.74" y1="76.2" x2="78.74" y2="58.42" width="0.1524" layer="91"/>
 <junction x="78.74" y="58.42"/>
+<pinref part="U$5" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
-<pinref part="U$4" gate="G$1" pin="A"/>
 <wire x1="78.74" y1="55.88" x2="78.74" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="78.74" y1="48.26" x2="88.9" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
@@ -3853,30 +3852,33 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="81.28" y1="55.88" x2="83.82" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="76.2" x2="81.28" y2="55.88" width="0.1524" layer="91"/>
 <junction x="81.28" y="55.88"/>
+<pinref part="U$6" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="GND" class="0">
 <segment>
-<pinref part="U$6" gate="G$1" pin="B"/>
 <wire x1="104.14" y1="27.94" x2="104.14" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="U$5" gate="G$1" pin="B"/>
 <wire x1="104.14" y1="38.1" x2="104.14" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="U$4" gate="G$1" pin="B"/>
 <wire x1="104.14" y1="48.26" x2="104.14" y2="81.28" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="A"/>
 <wire x1="50.8" y1="27.94" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="27.94" x2="45.72" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="38.1" x2="45.72" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="48.26" x2="45.72" y2="81.28" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="81.28" x2="73.66" y2="81.28" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="A"/>
 <wire x1="73.66" y1="81.28" x2="104.14" y2="81.28" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="48.26" x2="45.72" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="A"/>
 <wire x1="50.8" y1="38.1" x2="45.72" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="4"/>
 <wire x1="73.66" y1="76.2" x2="73.66" y2="81.28" width="0.1524" layer="91"/>
 <label x="73.66" y="76.2" size="1.778" layer="95" xref="yes"/>
+<pinref part="U$1" gate="G$1" pin="A"/>
+<pinref part="U$2" gate="G$1" pin="A"/>
+<pinref part="U$3" gate="G$1" pin="A"/>
+<pinref part="U$4" gate="G$1" pin="B"/>
+<pinref part="U$5" gate="G$1" pin="B"/>
+<junction x="104.14" y="38.1"/>
+<pinref part="U$6" gate="G$1" pin="B"/>
+<junction x="104.14" y="48.26"/>
 </segment>
 </net>
 <net name="VCC" class="0">
