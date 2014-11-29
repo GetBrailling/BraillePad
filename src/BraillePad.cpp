@@ -27,12 +27,12 @@ int max_as_int();
 int led = 13u;
 
 /* Button number to pin number correspondance */
-const int button_1 = 7;
-const int button_2 = 5;
-const int button_3 = 2;
-const int button_4 = 6;
-const int button_5 = 4;
-const int button_6 = 3;
+const int button_1 = 2;
+const int button_2 = 3;
+const int button_3 = 4;
+const int button_4 = 5;
+const int button_5 = 6;
+const int button_6 = 7;
 
 //the global variables for chord retriaval
 unsigned int button_state[6] = { 0, 0, 0, 0, 0, 0 };
@@ -103,12 +103,12 @@ void loop()
 
 void read_button_states()
 {
-  button_state[0] = digitalRead(button_1);
-  button_state[3] = digitalRead(button_4);
-  button_state[1] = digitalRead(button_2);
-  button_state[4] = digitalRead(button_5);
-  button_state[2] = digitalRead(button_3);
-  button_state[5] = digitalRead(button_6);
+  button_state[0] = 1^digitalRead(button_1);
+  button_state[3] = 1^digitalRead(button_4);
+  button_state[1] = 1^digitalRead(button_2);
+  button_state[4] = 1^digitalRead(button_5);
+  button_state[2] = 1^digitalRead(button_3);
+  button_state[5] = 1^digitalRead(button_6);
 }
 
 void OR_state_to_max()
