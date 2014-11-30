@@ -9,6 +9,13 @@
                          b3, b6)\
   ((b1) | ((b2)<<1) | ((b3)<<2) | ((b4)<<3) | ((b5)<<4) | ((b6)<<5))
 
+typedef enum MODE {
+	ALPHABET,//default
+	CAPITAL,
+	NUMBER
+}MODE;
+
+
 /* Constants */
 #define TRUE 1u
 #define FALSE 0u
@@ -19,6 +26,9 @@
 #define NUMBER_SIGN (GET_BRAILLE_CODE(O, X,\
                                       O, X,\
                                       X, X))
+#define CAPITAL_SIGN (GET_BRAILLE_CODE(0, 0,\
+									   0, 0,\
+									   0, 1))
 
 /* Variable declarations */
 extern char BrailleAlphabetMap[64];

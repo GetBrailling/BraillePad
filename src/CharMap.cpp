@@ -141,14 +141,29 @@ unsigned int GenerateAlphabetMap()
   ret_val += insert_to_map(GET_BRAILLE_CODE(X, X,
                                             O, X,
                                             X, X), 'y', BrailleAlphabetMap);
-//XXX: NON-STANDARD CHORDS!
+//punctuation
 	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
-											  O, X,
-											  O, O), ' ', BrailleAlphabetMap);
+											  X, X,
+											  O, X), '.', BrailleAlphabetMap);
 	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
 											  X, O,
-											  O, O), '\n', BrailleAlphabetMap);
-
+											  O, O), ',', BrailleAlphabetMap);
+	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
+											  X, X,
+											  X, O), '!', BrailleAlphabetMap);
+//XXX: NON-STANDARD CHORDS!
+	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
+											  O, O,
+											  X, O), ' ', BrailleAlphabetMap);
+	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
+											  X, X,
+											  X, X), '#', BrailleAlphabetMap);
+	ret_val += insert_to_map(GET_BRAILLE_CODE(O, O,
+											  O, X,
+											  O, O), KEY_RETURN, BrailleAlphabetMap);
+	ret_val += insert_to_map(GET_BRAILLE_CODE(O, X,
+											  O, O,
+											  O, O), KEY_BACKSPACE, BrailleAlphabetMap);
   return ret_val;
 }
 

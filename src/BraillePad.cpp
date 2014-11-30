@@ -13,6 +13,7 @@ extern "C" {
 void loop();
 void setup();
 void read_button_states();
+int change_mode();
 unsigned int check_states_empty(unsigned int * six_states);
 void empty_max();
 void OR_state_to_max();
@@ -55,7 +56,7 @@ void setup()
   // initialize control over the keyboard:
   Keyboard.begin();
   //also serial for debugging
-  Serial.begin(9600);
+  //Serial.begin(9600);
   /* TODO: assert return value */
   if (GenerateAlphabetMap() || GenerateNumericMap() || GenerateComputerMap())
   {
@@ -63,42 +64,85 @@ void setup()
   }
 }
 
-// The loop function is called in an endless loop
+MODE chord_mode = ALPHABET;
+static char * BrailleMap = BrailleAlphabetMap;
+unsigned char cur_braille_code;
+
 void loop()
 {
-  static unsigned char numeric_mode = FALSE;
-  static char * BrailleMap = BrailleAlphabetMap;
-  unsigned char cur_braille_code;
-  // read the pushbuttons:
-  read_button_states();
-  OR_state_to_max();
+	// read the pushbuttons:
+	read_button_states();
+	OR_state_to_max();
 
-  //if all buttons are released print last maximum
-  if (check_states_empty(button_state) == TRUE)
-  {
-    if (cur_braille_code = max_as_int()) /* if the last maximum is zero, it has already been printed */
-    { /* Process the combination ... */
-      if (cur_braille_code == NUMBER_SIGN)
-      {
-        if (numeric_mode) /* if previously we had numeric mode */
-        {
-          BrailleMap = BrailleAlphabetMap;
-        }
-        else
-        {
-          BrailleMap = BrailleNumericMap;
-        }
-        numeric_mode = !numeric_mode;
-      }
-      else
-      {
-        Keyboard.print(BrailleMap[cur_braille_code]);
-      }
-      empty_max();
-    }
-  }
+	//if all buttons are released print last maximum
+	if (check_states_empty(button_state) == TRUE)
+	{/* if the last maximum is zero, it has already been printed */
+		cur_braille_code = max_as_int();
+		if(cur_braille_code != 0)
+		{ /* Process the combination ... */
+			if(change_mode() == 0)
+			{
+				if(chord_mode == CAPITAL
+					&& BrailleMap[cur_braille_code] >='a'
+					&& BrailleMap[cur_braille_code] <='z'){
+					Keyboard.press(BrailleMap[cur_braille_code]-32);
+					chord_mode = ALPHABET;
+				}else{
+					Keyboard.press(BrailleMap[cur_braille_code]);
+				}
+				Keyboard.releaseAll();
+    	    	//Serial.print(BrailleMap[cur_braille_code]);
+    	  	}
+			empty_max();
+		}
+	}
   //we dont need this:
   delay(10);
+}
+
+//returns 1 if the chord should not be futher processed
+int change_mode(){
+	//if we write a spacebar/newline, then change back to alphabet
+	if(cur_braille_code == GET_BRAILLE_CODE(0,0,1, 0,0,0)
+	|| cur_braille_code == GET_BRAILLE_CODE(0,0,0, 0,1,0))
+	{
+		BrailleMap = BrailleAlphabetMap;
+		chord_mode = ALPHABET;
+		Keyboard.press(BrailleMap[cur_braille_code]);
+		Keyboard.releaseAll();
+		return 1;
+	}
+	//if the number code is written, then change to or from numbers
+	if(cur_braille_code == NUMBER_SIGN)
+	{
+		if (chord_mode == NUMBER) /* if previously we had numeric mode */
+		{
+			BrailleMap = BrailleAlphabetMap;
+			chord_mode = ALPHABET;
+		}
+		else
+		{
+			BrailleMap = BrailleNumericMap;
+			chord_mode = NUMBER;
+		}
+		return 1;
+	}
+	//if shift/capital code is written, then change to or from capitals
+	if(cur_braille_code == CAPITAL_SIGN)
+	{
+		if (chord_mode == CAPITAL) /* if previously we had numeric mode */
+		{
+			BrailleMap = BrailleAlphabetMap;
+			chord_mode = ALPHABET;
+		}
+		else
+		{
+			BrailleMap = BrailleAlphabetMap;
+			chord_mode = CAPITAL;
+		}
+		return 1;
+	}
+	return 0;
 }
 
 void read_button_states()
