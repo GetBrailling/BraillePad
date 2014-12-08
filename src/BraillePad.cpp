@@ -1,7 +1,7 @@
 /*
 This code is meant to be run on arduino Leonardo or similar platform
 History: 24-26.10.2014 - Juha Kivekäs: created during TehnoHack weekend
-            20.11.2014 - Siim Sepman: Created multiple input maps; added numbers
+20.11.2014 - Siim Sepman: Created multiple input maps; added numbers
 */
 
 #include "BraillePad.h"
@@ -12,108 +12,127 @@ extern "C" {
 #endif
 void loop();
 void setup();
-void read_button_states();
-int change_mode();
-unsigned int check_states_empty(unsigned int * six_states);
-void empty_max();
-void OR_state_to_max();
-int max_as_int();
+
+void pin_change();
+void send_chord(char chord);
+int change_mode(char chord);
+char read_buttons();
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
 /* Variable declarations/definitions */
 
-/* indicator led pin */
-int led = 13u;
+/* Button number to pin correspondance */
+//the buttons are numbered according to the braille cells
+//ie. button_1 is cell one.
+#define button_1 3
+#define button_2 2
+#define button_3 0
+#define button_4 1
+#define button_5 8
+#define button_6 9
+#define button_7 10
+#define button_8 11
 
-/* Button number to pin number correspondance */
-const int button_1 = 2;
-const int button_2 = 3;
-const int button_3 = 4;
-const int button_4 = 5;
-const int button_5 = 6;
-const int button_6 = 7;
-
-//the global variables for chord retriaval
-unsigned int button_state[6] = { 0, 0, 0, 0, 0, 0 };
-unsigned int button_max[6] = { 0, 0, 0, 0, 0, 0 };
-
-
-
-//The setup function is called once at startup of the sketch
-void setup()
-{
-  /*
-  pinMode(led, OUTPUT);
-  */
-  pinMode(button_1, INPUT);
-  pinMode(button_4, INPUT);
-  pinMode(button_2, INPUT);
-  pinMode(button_5, INPUT);
-  pinMode(button_3, INPUT);
-  pinMode(button_6, INPUT);
-  // initialize control over the keyboard:
-  Keyboard.begin();
-  //also serial for debugging
-  //Serial.begin(9600);
-  /* TODO: assert return value */
-  if (GenerateAlphabetMap() || GenerateNumericMap() || GenerateComputerMap())
-  {
-    digitalWrite(led, HIGH);
-  }
-}
-
+//----GLOBAL VARIABLES
+//for chord retrival
+volatile char curr_chord = 0;
+//for keymap handling
 MODE chord_mode = ALPHABET;
 static char * BrailleMap = BrailleAlphabetMap;
-unsigned char cur_braille_code;
 
-void loop()
-{
-	// read the pushbuttons:
-	read_button_states();
-	OR_state_to_max();
+//The setup function is called once at startup of the sketch
+void setup(){
+	//initialize the buttons
+	pinMode(button_1, INPUT);
+	pinMode(button_2, INPUT);
+	pinMode(button_3, INPUT);
+	pinMode(button_4, INPUT);
+	pinMode(button_5, INPUT);
+	pinMode(button_6, INPUT);
+	//XXX uncomment to enable cells 7 and 8
+	//pinMode(button_7, INPUT);
+	//pinMode(button_8, INPUT);
+	// initialize control over the keyboard:
+	Keyboard.begin();
+	GenerateAlphabetMap();
+	GenerateNumericMap();
+	GenerateComputerMap();
 
-	//if all buttons are released print last maximum
-	if (check_states_empty(button_state) == TRUE)
-	{/* if the last maximum is zero, it has already been printed */
-		cur_braille_code = max_as_int();
-		if(cur_braille_code != 0)
-		{ /* Process the combination ... */
-			if(change_mode() == 0)
-			{
-				if(chord_mode == CAPITAL
-					&& BrailleMap[cur_braille_code] >='a'
-					&& BrailleMap[cur_braille_code] <='z'){
-					Keyboard.press(BrailleMap[cur_braille_code]-32);
-					chord_mode = ALPHABET;
-				}else{
-					Keyboard.press(BrailleMap[cur_braille_code]);
-				}
-				Keyboard.releaseAll();
-    	    	//Serial.print(BrailleMap[cur_braille_code]);
-    	  	}
-			empty_max();
-		}
+	
+	//----initialize all button interrupts
+	//enable and unmask external interrupts INT0, INT1, INT2, INT3
+	//these will be on pins PD0 (#3) PD1 (2) PD2 (0) PD3 (1)
+	EICRA = (1<<ISC00)|(1<<ISC10)|(1<<ISC20)|(1<<ISC30);
+	EIMSK = (1<<INT0) |(1<<INT1) |(1<<INT2) |(1<<INT3);
+	//enable and unmask the pin change interrupt
+	//this will fire on pins PB4 (8) PB5 (#9) PB6 (10) PB7(11)
+	PCICR = (1<<PCIE0);
+	PCMSK0= (1<<PCINT4)|(1<<PCINT5);//|(1<<PCINT6)|(1<<PCINT7);
+	//XXX uncomment end of the line to enable cells 7 and 8
+	sei();
+}
+
+void loop(){
+	//IDLE
+}
+
+//redirect all the different button interrupts to one function
+ISR(INT0_vect)  {pin_change();}
+ISR(INT1_vect)  {pin_change();}
+ISR(INT2_vect)  {pin_change();}
+ISR(INT3_vect)  {pin_change();}
+ISR(PCINT0_vect){pin_change();}
+
+void pin_change(){
+	char buttons = read_buttons();
+	if(buttons == 0){
+		//if no buttons are pressed send a chord
+		send_chord(curr_chord);
+		curr_chord = 0;
+	}else{
+		//if some buttons are pressed add them to the chord
+		curr_chord |= buttons;
 	}
-  //we dont need this:
-  delay(10);
+}
+
+char read_buttons(){
+	//fiddle the raw data so that the bit at position 'n'
+	//will correspond to the braille cell 'n+1' being pressed
+	char pretty = (~PINB & 0b00110000) | (~PIND & 0b00001111);
+	//XXX change first mask to 0b11110000 to enable cells 7 and 8
+	return pretty;
+}
+
+void send_chord(char chord){
+	if(change_mode(chord) == 0){
+		if(chord_mode == CAPITAL
+			&& BrailleMap[chord] >='a'
+			&& BrailleMap[chord] <='z'){
+			Keyboard.press(BrailleMap[chord]-32);
+			chord_mode = ALPHABET;
+		}else{
+			Keyboard.press(BrailleMap[chord]);
+		}
+		Keyboard.releaseAll();
+	}
 }
 
 //returns 1 if the chord should not be futher processed
-int change_mode(){
+int change_mode(char chord){
 	//if we write a spacebar/newline, then change back to alphabet
-	if(cur_braille_code == GET_BRAILLE_CODE(0,0,1, 0,0,0)
-	|| cur_braille_code == GET_BRAILLE_CODE(0,0,0, 0,1,0))
+	if(chord == GET_BRAILLE_CODE(0,0,1, 0,0,0)
+	|| chord == GET_BRAILLE_CODE(0,0,0, 0,1,0))
 	{
 		BrailleMap = BrailleAlphabetMap;
 		chord_mode = ALPHABET;
-		Keyboard.press(BrailleMap[cur_braille_code]);
+		Keyboard.press(BrailleMap[chord]);
 		Keyboard.releaseAll();
 		return 1;
 	}
 	//if the number code is written, then change to or from numbers
-	if(cur_braille_code == NUMBER_SIGN)
+	if(chord == NUMBER_SIGN)
 	{
 		if (chord_mode == NUMBER) /* if previously we had numeric mode */
 		{
@@ -128,7 +147,7 @@ int change_mode(){
 		return 1;
 	}
 	//if shift/capital code is written, then change to or from capitals
-	if(cur_braille_code == CAPITAL_SIGN)
+	if(chord == CAPITAL_SIGN)
 	{
 		if (chord_mode == CAPITAL) /* if previously we had numeric mode */
 		{
@@ -143,61 +162,4 @@ int change_mode(){
 		return 1;
 	}
 	return 0;
-}
-
-void read_button_states()
-{
-  button_state[0] = 1^digitalRead(button_1);
-  button_state[3] = 1^digitalRead(button_4);
-  button_state[1] = 1^digitalRead(button_2);
-  button_state[4] = 1^digitalRead(button_5);
-  button_state[2] = 1^digitalRead(button_3);
-  button_state[5] = 1^digitalRead(button_6);
-}
-
-void OR_state_to_max()
-{
-  int i;
-  for (i = 0; i < 6; i++)
-  {
-    button_max[i] |= button_state[i];
-  }
-}
-
-unsigned int check_states_empty(unsigned int * six_states)
-{
-  unsigned int ret_val = TRUE;
-  int i;
-  for (i = 0; i < 6; i++)
-  {
-    if(six_states[i] == HIGH)
-    {
-      ret_val = FALSE;
-    }
-  }
-  return ret_val;
-}
-
-void empty_max()
-{
-  int i;
-  for (i = 0; i < 6; i++)
-  {
-    button_max[i] = 0;
-  }
-}
-
-int max_as_int()
-{
-  int i;
-  unsigned int sum = 0u;
-  for (i = 5; i >= 0; i--)
-  {
-    sum = sum << 1;
-    if (button_max[i] == HIGH)
-    {
-      sum++;
-    }
-  }
-  return sum;
 }
